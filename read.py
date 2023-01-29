@@ -1,6 +1,6 @@
 from pyspark.context import SparkContext
 from pyspark.sql.session import SparkSession
-from pyspark.sql.functions import array, array_contains, count, explode
+from pyspark.sql.functions import array, array_contains, count, explode, size
 from pyspark.sql.types import *
 
 sc = SparkContext('local')
@@ -17,7 +17,7 @@ def read_file(file):
         .withColumn('rate', df.rate.cast('float'))
         .withColumn('ratings', df.ratings.cast('int'))
         .withColumn('comments', df.comments.cast('int'))
-        .withColumn('backlinks', array()))
+        .withColumn('links', size('relatedIDs')))
 
 df = read_file(['./0222/0.txt', './0222/1.txt'])
 
@@ -28,4 +28,8 @@ related = df.select(df.videoID, explode(df.relatedIDs).alias('relatedID'))
 
 backlinks = related.groupBy('relatedID').agg(count('videoID').alias('backlinks')).withColumnRenamed('relatedID', 'videoID')
 
-backlinks.sort('backlinks', ascending=False).show()
+# backlinks.sort('backlinks', ascending=False).show()
+
+degrees = df.join(backlinks, df.videoID == backlinks.videoID, 'leftouter').select(df.videoID, 'links', 'backlinks')
+degrees = degrees.withColumn('degree', degrees.links + degrees.backlinks)
+degrees.sort('degree', ascending=False).show()
