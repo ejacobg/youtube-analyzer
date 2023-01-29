@@ -1,6 +1,6 @@
 from pyspark.context import SparkContext
 from pyspark.sql.session import SparkSession
-from pyspark.sql.functions import array, array_contains, count, explode, size
+from pyspark.sql.functions import array, array_contains, coalesce, count, explode, lit,size
 from pyspark.sql.types import *
 
 sc = SparkContext('local')
@@ -30,6 +30,6 @@ backlinks = related.groupBy('relatedID').agg(count('videoID').alias('backlinks')
 
 # backlinks.sort('backlinks', ascending=False).show()
 
-degrees = df.join(backlinks, df.videoID == backlinks.videoID, 'leftouter').select(df.videoID, 'links', 'backlinks')
+degrees = df.join(backlinks, df.videoID == backlinks.videoID, 'leftouter').select(df.videoID, 'links', 'backlinks').fillna(0)
 degrees = degrees.withColumn('degree', degrees.links + degrees.backlinks)
-degrees.sort('degree', ascending=False).show()
+degrees.sort('degree').write.csv('degrees', mode='overwrite', header=True)
