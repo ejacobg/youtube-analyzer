@@ -1,7 +1,6 @@
 from pyspark.context import SparkContext
 from pyspark.sql.session import SparkSession
-from pyspark.sql.functions import array
-from pyspark.sql.functions import array_contains
+from pyspark.sql.functions import array, array_contains, count, explode
 from pyspark.sql.types import *
 
 sc = SparkContext('local')
@@ -20,8 +19,13 @@ def read_file(file):
         .withColumn('comments', df.comments.cast('int'))
         .withColumn('backlinks', array()))
 
-df = read_file('0222/1.txt')
+df = read_file(['./0222/0.txt', './0222/1.txt'])
 
 df.show(1)
 
-backlinks = df.select(df.videoID).where(array_contains(df.relatedIDs, 'LKh7zAJ4nwo')).show()
+related = df.select(df.videoID, explode(df.relatedIDs).alias('relatedID'))
+# related.show()
+
+backlinks = related.groupBy('relatedID').agg(count('videoID').alias('backlinks')).withColumnRenamed('relatedID', 'videoID')
+
+backlinks.sort('backlinks', ascending=False).show()
