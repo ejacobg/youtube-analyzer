@@ -1,5 +1,6 @@
 import os
 
+
 def main():
     # get_file("Enter input file(s) path:")
     menu()
@@ -19,9 +20,9 @@ def menu():
         command = input("Enter Command:")
 
         if command == "D":
-            degree_distribution()
+            degree_distribution(df)
         elif command == "C":
-            categorized_statistics()
+            categorized_statistics(df)
         elif command == "R":
             df = input_file()
         elif command == "E":
@@ -29,13 +30,15 @@ def menu():
         else:
             print("Not a valid command, please try again.")
 
+
 def input_file():
     file = input("Enter input file(s): ")
     # Pass file data into Spark and return Dataframe.
     # Also return a second argument indicating success?
     return
 
-def degree_distribution():
+
+def degree_distribution(df):
     dir = input("Output directory:")
     # Calculate degree stuff...
     print("Writing to ", dir, "...", sep="")
@@ -43,24 +46,28 @@ def degree_distribution():
     # Don't need to return anything?
     print("Finished.")
 
-def categorized_statistics():
-    print("Filter data:")
-    # Not sure what options I want yet
-    # Just take a single SQL query to filter with?
+
+def categorized_statistics(df):
+    # Not sure what happens if filter is empty
+    # Use case is supposed to be for queries like "generate statistics for views > 10000"
+    condition = input("Filter data: ")
+    df = df.filter(condition)
+    df.show()
 
     while True:
         command = input("[G]enerate statistics or [E]xport: ")
         if command == "G":
-            generate_statistics()
+            generate_statistics(df)
             break
         elif command == "E":
-            export()
+            export(df)
             break
         else:
             print("Invalid input.")
     return
 
-def generate_statistics():
+
+def generate_statistics(df):
     print("Select columns to aggregate on:")
     # Print columns, marking them if they have been selected already
     # Alternatively, just remove a column from the list if it has been selected
@@ -78,9 +85,10 @@ def generate_statistics():
 
     print("Distribution of videos according to above criteria:")
 
-    return 
+    return
 
-def export():
+
+def export(df):
     print("Export\n\t[S]elected Columns\n\t[A]ll Columns\n")
     command = input("> ")
 
@@ -89,6 +97,7 @@ def export():
     # Spark stuff
     print("Finished.")
     return
+
 
 if __name__ == "__main__":
     main()
