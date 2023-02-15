@@ -1,5 +1,8 @@
 import os
-
+from degrees import write_degrees
+from read import read_file
+from stats import aggregate_columns
+from pyspark.sql.functions import concat_ws
 
 def main():
     # get_file("Enter input file(s) path:")
@@ -32,18 +35,16 @@ def menu():
 
 
 def input_file():
-    file = input("Enter input file(s): ")
+    # List multiple files as a space-separated list. 
+    file = input("Enter input file(s): ").split
     # Pass file data into Spark and return Dataframe.
     # Also return a second argument indicating success?
-    return
+    return read_file(file).dropna()
 
 
 def degree_distribution(df):
     dir = input("Output directory:")
-    # Calculate degree stuff...
-    print("Writing to ", dir, "...", sep="")
-    # degrees.write.csv(...)
-    # Don't need to return anything?
+    write_degrees(df, dir)
     print("Finished.")
 
 
@@ -68,33 +69,36 @@ def categorized_statistics(df):
 
 
 def generate_statistics(df):
-    print("Select columns to aggregate on:")
-    # Print columns, marking them if they have been selected already
-    # Alternatively, just remove a column from the list if it has been selected
-
-    # Get column choice
-    column = input("> ")
-
-    # If column is numeric
-    print("Numeric column", column, "requires bucketing.")
-    buckets = input("Enter buckets: ")
-
-    # Save all selected columns/buckets in a list or something
-
-    # Run Spark calculation
-
-    print("Distribution of videos according to above criteria:")
-
+    aggregate_columns(df)
     return
 
 
 def export(df):
     print("Export\n\t[S]elected Columns\n\t[A]ll Columns\n")
-    command = input("> ")
+
+    columns = []
+    while True:
+        command = input("> ")
+        if command == "S":
+            df.printSchema()
+            # Space-separated list (won't be checking duplicates)
+            columns = input("Enter columns: ").split()
+            break
+        elif command == "A":
+            break
+        else:
+            print("Invalid input.")
 
     dir = input("Output directory:")
     print("Writing to ", dir, "...", sep="")
+
+    if "relatedIDs" in columns:
+        copy = df.withColumn("relatedIDs", concat_ws(",", "relatedIDs"))
+    else:
+        copy = df
+
     # Spark stuff
+    copy.select(columns).write.csv(dir, mode="overwrite", header=True)
     print("Finished.")
     return
 

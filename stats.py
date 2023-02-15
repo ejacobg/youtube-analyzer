@@ -11,11 +11,18 @@ def aggregate_columns(df):
     # eg. age category length
     columns = input("> ").split()
 
+    # Do not process the same column twice
+    seen = []
     # Iterate over each column
     for column in columns:
         if column not in df_columns:
             print("Unrecognized column '", column, "'", sep="")
             continue
+
+        # If the column has been seen before, ignore it
+        if column in seen:
+            continue
+
         # If the column is numeric, take in buckets
         if column in numeric_columns:
             print("Numeric column", column, "requires bucketing.")
@@ -24,16 +31,20 @@ def aggregate_columns(df):
             buckets = input("Enter buckets: ").split()
 
             # user should not input "inf"
+            # technically the user can input "inf", needs decision
             buckets = [-float("inf")] + [float(i) for i in buckets] + [float("inf")] # cast to list of floats
 
             bucketizer = Bucketizer(splits=buckets, inputCol=column, outputCol=column+"_bucket")
             df = bucketizer.transform(df)
-        
-        # technically nothing else needs to be done if the column is of type string
 
+            # The bucket column needs to be used rather than the original column
+            seen.append(column+"_bucket")
+        else:
+            # Otherwise, the column is a string column, which does not need to be bucketed
+            seen.append(column)
 
     # Perform final groupBy
     print("Distribution of videos according to above criteria:")
-    # Invalid columns need to be removed before being passed in
-    # df.groupBy(columns).count()
+    # Write to csv instead?
+    df.groupBy(seen).count().sort("count", ascending=False).show()
     return
