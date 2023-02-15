@@ -20,7 +20,7 @@ def menu():
             "====Menu====\n [D]egree Distribution\n [C]ategorized Statistics\n [R]estart\n [E]xit"
         )
 
-        command = input("Enter Command:")
+        command = input("Enter Command: ")
 
         if command == "D":
             degree_distribution(df)
@@ -36,14 +36,14 @@ def menu():
 
 def input_file():
     # List multiple files as a space-separated list. 
-    file = input("Enter input file(s): ").split
+    file = input("Enter input file(s): ").split()
     # Pass file data into Spark and return Dataframe.
     # Also return a second argument indicating success?
     return read_file(file).dropna()
 
 
 def degree_distribution(df):
-    dir = input("Output directory:")
+    dir = input("Output directory: ")
     write_degrees(df, dir)
     print("Finished.")
 
@@ -52,8 +52,9 @@ def categorized_statistics(df):
     # Not sure what happens if filter is empty
     # Use case is supposed to be for queries like "generate statistics for views > 10000"
     condition = input("Filter data: ")
-    df = df.filter(condition)
-    df.show()
+    if condition != "":
+        df = df.filter(condition)
+        df.show()
 
     while True:
         command = input("[G]enerate statistics or [E]xport: ")
@@ -76,7 +77,7 @@ def generate_statistics(df):
 def export(df):
     print("Export\n\t[S]elected Columns\n\t[A]ll Columns\n")
 
-    columns = []
+    columns = df.columns
     while True:
         command = input("> ")
         if command == "S":
@@ -89,10 +90,14 @@ def export(df):
         else:
             print("Invalid input.")
 
-    dir = input("Output directory:")
+    dir = input("Output directory: ")
     print("Writing to ", dir, "...", sep="")
 
     if "relatedIDs" in columns:
+        # relatedIDs must be the last item in the csv since it is a list
+        columns.remove("relatedIDs")
+        columns.append("relatedIDs")
+        
         copy = df.withColumn("relatedIDs", concat_ws(",", "relatedIDs"))
     else:
         copy = df
