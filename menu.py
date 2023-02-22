@@ -6,8 +6,9 @@ from pyspark.sql.functions import concat_ws
 
 def main():
     # get_file("Enter input file(s) path:")
+    #setLogLevel("ERROR")
     menu()
-
+    
 
 def menu():
     # Read given file(s).
