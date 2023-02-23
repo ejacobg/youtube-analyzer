@@ -8,7 +8,6 @@ import customtkinter #allows for color customization
 import pandas as pd #library used for data 
 import matplotlib.pyplot as plt #library used for making graphs 
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg #Allows graphs to be removed in tkinder window 
-from menu import degree_distribution_gui
 import os #allows users to navigate around directories 
 
 #functions from other Python files 
@@ -136,26 +135,42 @@ def categorizedFunctionality(df):
     CategorizedWindow.geometry('1000x600') # Window size
   
     userInput = '' 
-    
-    def get_input(df):
+   
+    def get_input(df, userInput):
         # Get the input from the box
-        userInput = input_box.get_text()
         if(userInput != ''):
-            df = df.filter(condition)
-            button.destory()
+            df = df.filter(userInput)
+            # button.destory()
+            # entry.destory()
             showMenu()
 
+    def filter_dataset():
+        userInput = entry.get()
+        get_input(df, userInput)
+  
+
     def showMenu():
-        button1 = customtkinter.CTkButton(root,  font=("Helvetica", buttonSize), text="Generate statistics", command=lambda: generate_statistics(df))
+        button1 = customtkinter.CTkButton(CategorizedWindow,  font=("Helvetica", buttonSize), text="Generate statistics", command=lambda: generate_statistics(df))
         button1.place(relx=0.5, rely=0.3, anchor=tk.CENTER)
 
-        button2 = customtkinter.CTkButton(root,  font=("Helvetica", buttonSize), text="Export", command=lambda: degreeFunctionality(df))
-        button2.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
-        
+        button2 = customtkinter.CTkButton(CategorizedWindow,  font=("Helvetica", buttonSize), text="Export", command=lambda: degreeFunctionality(df))
+        button2.place(relx=0.5, rely=0.7, anchor=tk.CENTER)
+    
+    
+    # Create the input text for commands 
+    entry = customtkinter.CTkEntry(master=CategorizedWindow,
+                                placeholder_text="Type Command",
+                                width=120,
+                                height=25,
+                                border_width=2,
+                                corner_radius=10)
+    entry.place(relx=0.80, rely=0.5, anchor=tk.CENTER)
+
+    
     # Create a button to get the input
-    button = customtkinter.CTkButton(CategorizedWindow, text="Type Filter Command", command=get_input(df))
-    button.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
-    button.pack(pady=20)
+    button = customtkinter.CTkButton(CategorizedWindow, text="Filter Dataset", command=filter_dataset)
+    button.place(relx=0.20, rely=0.5, anchor=tk.CENTER)
+
 
 
 
