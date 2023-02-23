@@ -49,6 +49,27 @@ def degree_distribution(df):
     print("Finished.")
 
 
+
+def categorized_statistics_gui(df, condition):
+    # Not sure what happens if filter is empty
+    # Use case is supposed to be for queries like "generate statistics for views > 10000"
+    if condition != "":
+        df = df.filter(condition)
+        df.show()
+
+    while True:
+        command = input("[G]enerate statistics or [E]xport: ")
+        if command == "G":
+            generate_statistics(df)
+            break
+        elif command == "E":
+            export(df)
+            break
+        else:
+            print("Invalid input.")
+    return
+
+
 def categorized_statistics(df):
     # Not sure what happens if filter is empty
     # Use case is supposed to be for queries like "generate statistics for views > 10000"

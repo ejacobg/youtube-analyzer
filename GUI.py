@@ -8,9 +8,19 @@ import customtkinter #allows for color customization
 import pandas as pd #library used for data 
 import matplotlib.pyplot as plt #library used for making graphs 
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg #Allows graphs to be removed in tkinder window 
+from menu import degree_distribution_gui
+import os #allows users to navigate around directories 
 
-#global variable for window 
-root = customtkinter.CTk() #Load window
+#functions from other Python files 
+from degrees import write_degrees
+from menu import input_file
+from menu import generate_statistics
+from read import read_file
+
+#global variable for window visuals 
+root = customtkinter.CTk() #Load window 
+buttonSize = 70 #size of button via enhanced font  
+
 
 #global variables for color customization for buttons 
 customtkinter.set_appearance_mode("System")  # Modes: system (default), light, dark
@@ -23,7 +33,7 @@ def main():
     window()
     
 
-def dropdownClicked(column, df):
+def dropdownClicked(column, df, entry):
     print("dropdownClicked called!")
     
     # Create a new window for the graph
@@ -36,8 +46,9 @@ def dropdownClicked(column, df):
     # Create the figure and axis objects
     fig, ax = plt.subplots(figsize=(6,4), dpi=100)
 
+    print(entry)
     # Create a histogram of the selected column
-    ax.hist(df[column], bins=7)
+    ax.hist(df[column], bins=entry)
 
     # Set the title and axis labels
     ax.set_title("Histogram of " + column)
@@ -53,6 +64,12 @@ def dropdownClicked(column, df):
 
 #plot function to plot CSV data 
 def plotFile(userFile):
+    
+    PlotWindow = tk.Tk() #new window 
+    PlotWindow.title("Plot Customization") #title 
+    PlotWindow.geometry('500x300') # Window size
+    
+    print(userFile)
     #check if file chosen is a CSV 
     if userFile.endswith('.csv'):
         
@@ -62,20 +79,99 @@ def plotFile(userFile):
         #Get column information from CSV
         columnNames = df.columns.tolist()
 
-        #Create a dropdown for each column in the CSV file 
-        #aided by (https://github.com/TomSchimansky/CustomTkinter/wiki/CTkButton)
-        combobox = customtkinter.CTkOptionMenu(master=root,
-                                        values=columnNames,
-                                        command=lambda col: dropdownClicked(col, df))
-        combobox.pack(padx=50, pady=30)
+       
+        #slider function to set global variable 
+        def slider_event(value):
+            slider_value.set(value)
+            label.config(text="bin number: " + str(slider_value.get()))
 
+        slider_value = tk.IntVar()
+        slider = customtkinter.CTkSlider(master=PlotWindow, number_of_steps=20, from_=0, to=20, command=slider_event)
+        slider.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+
+        label = tk.Label(PlotWindow, text="bin number: " + str(slider_value.get()), font='Arial 12 bold')
+        label.place(relx=0.5, rely=0.6, anchor=tk.CENTER)
+        
+        # Create a dropdown for each column in the CSV file 
+        combobox = customtkinter.CTkOptionMenu(master=PlotWindow,
+                                        values=columnNames,
+                                        command=lambda col: dropdownClicked(col, df, slider_value.get()))
+        combobox.pack(padx=50, pady=30)
+        
     #If not a CSV 
     else:
        # Create text at center of screen to inform user that this is not a CSV
-        label=Label(root, text="Not a csv file, please try again", font='Arial 12 bold')
+        label=Label(PlotWindow, text="Not a csv file, please try again", font='Arial 12 bold')
         label.place(relx=0.5, rely=0.5, anchor=CENTER)
 
+#replicates degree functionality in CLI 
+def degreeFunctionality(df):
+    DegreeWindow = tk.Tk()
+    DegreeWindow.title("Degree Output Creation")
+    DegreeWindow.geometry('1000x600') # Window size
 
+    outputPath = ""
+
+    def degreeDestination(df):    
+        outputPath = directorySelection()
+        if os.path.isdir(outputPath):
+            
+            write_degrees(df, outputPath) # pass DataFrame object to write_degrees() function 
+            
+            label = tk.Label(DegreeWindow, text="Completed! You may now close this window.", font='Arial 14 bold')
+            label.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+            
+            # Destroy button after function finishes executing
+            buttonInput.destroy()
+    
+    #button that requires user to select valid input file 
+    buttonInput = customtkinter.CTkButton(DegreeWindow, font=("Helvetica", buttonSize), text="Choose Output File", command=lambda: degreeDestination(df))
+    buttonInput.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+   
+   
+#categorized functionality from CLI 
+def categorizedFunctionality(df):
+    CategorizedWindow = tk.Tk()
+    CategorizedWindow.title("Categorize Data")
+    CategorizedWindow.geometry('1000x600') # Window size
+  
+    userInput = '' 
+    
+    def get_input(df):
+        # Get the input from the box
+        userInput = input_box.get_text()
+        if(userInput != ''):
+            df = df.filter(condition)
+            button.destory()
+            showMenu()
+
+    def showMenu():
+        button1 = customtkinter.CTkButton(root,  font=("Helvetica", buttonSize), text="Generate statistics", command=lambda: generate_statistics(df))
+        button1.place(relx=0.5, rely=0.3, anchor=tk.CENTER)
+
+        button2 = customtkinter.CTkButton(root,  font=("Helvetica", buttonSize), text="Export", command=lambda: degreeFunctionality(df))
+        button2.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+        
+    # Create a button to get the input
+    button = customtkinter.CTkButton(CategorizedWindow, text="Type Filter Command", command=get_input(df))
+    button.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+    button.pack(pady=20)
+
+
+
+
+
+    
+    
+   
+#function that allows user to browse file nad choose a path 
+def fileSelection():
+    inputPath = filedialog.askopenfilename() #Allows user to browse their files 
+    return inputPath #return file path 
+
+def directorySelection():
+    outputPath = filedialog.askdirectory() #Allows uer to browse their directories   
+    return outputPath #return directory path 
 
 #Function to load window 
 #Aided by (https://www.geeksforgeeks.org/create-first-gui-application-using-python-tkinter/) 
@@ -85,38 +181,40 @@ def window():
     root.title("Youtube Analyzer | Team One | CS 631") # Window title 
     root.geometry('1000x600') # Window size
     
-
-    #function that allows user to browse file nad choose a path 
-    def chooseFile():
-        filePath = filedialog.askopenfilename() #Allows user to browse their directories 
-        return filePath 
-
     #Window Menu Declarations  
     menu = Menu(root) #make a menu for the root window  
     flieMenu = Menu(menu) #assign instance of menu to a variable to add functionality 
     root.config(menu=menu) #set menu to be on top layer of window 
 
-    #Root Menu Options 
-    menu.add_cascade(label='File', menu=flieMenu) #Button at top menu  
-    flieMenu.add_command(label='Open', command=lambda: plotFile(chooseFile())) #option within button that calls chooseFile() 
-    #Note lambda here means that chooseFile() will have to return something first then plot_file() will be executed.
-    #Without lambda the the functions might be executed simultaneously or without waiting for chooseFile()
+    inputPath = "" #input file path 
 
-
-    #testing 
-
-    sizing = 70 #size of button via enhanced font  
+    #function that uses input file path 
+    def Fileinput():
+        inputPath = fileSelection()
+        if(inputPath.endswith(".txt") or inputPath.endswith(".csv")):
+            showMenu(inputPath)
+            
+            
+    #menu from CLI 
+    def showMenu(inputPath):
+        
+        # Load DataFrame from file path
+        df = read_file(inputPath).dropna()
     
-    # create four buttons with labels and grid positions
-    button1 = customtkinter.CTkButton(root,  font=("Helvetica", sizing), text="Degree")
-    button1.grid(column=0, row=0, sticky="S",  pady=20)
+        # create four buttons with labels and grid positions
+        button1 = customtkinter.CTkButton(root,  font=("Helvetica", buttonSize), text="Degree", command=lambda: degreeFunctionality(df))
+        button1.place(relx=0.5, rely=0.3, anchor=tk.CENTER)
 
-    button2 = customtkinter.CTkButton(root,  font=("Helvetica", sizing), text="Categorized Statistics")
-    button2.grid(column=0, row=1, sticky="N", pady=20)
+        button2 = customtkinter.CTkButton(root,  font=("Helvetica", buttonSize), text="Categorized Statistics", command=lambda: categorizedFunctionality(df))
+        button2.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
 
-    # center the buttons in the window
-    root.columnconfigure(0, weight=1)
-    root.rowconfigure([0, 1], weight=1)
+        button3 = customtkinter.CTkButton(root,  font=("Helvetica", buttonSize), text="Plot Graph", command=lambda: plotFile(inputPath))
+        button3.place(relx=0.5, rely=0.7, anchor=tk.CENTER)
+
+    #button that requires user to select valid input file 
+    button0 = customtkinter.CTkButton(root, font=("Helvetica", buttonSize), text="Choose Input File (csv or txt)", command=Fileinput)
+    button0.place(relx=0.5, rely=0.1, anchor=tk.CENTER)
+
 
     # all widgets will be here
     # Execute Tkinter
