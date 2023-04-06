@@ -3,6 +3,7 @@ from degrees import write_degrees
 from read import read_file
 from stats import aggregate_columns
 from pyspark.sql.functions import concat_ws
+from pyspark.sql import SparkSession
 
 def main():
     # get_file("Enter input file(s) path:")
@@ -18,7 +19,7 @@ def menu():
     command = " "
     while True:
         print(
-            "====Menu====\n [D]egree Distribution\n [C]ategorized Statistics\n [R]estart\n [E]xit"
+            "====Menu====\n [D]egree Distribution\n [C]ategorized Statistics\n [R]estart\n [S]ql Command\n [E]xit"
         )
 
         command = input("Enter Command: ")
@@ -29,6 +30,8 @@ def menu():
             categorized_statistics(df)
         elif command == "R":
             df = input_file()
+        elif command == "S":
+            Full_SQL(df)
         elif command == "E":
             break
         else:
@@ -53,6 +56,7 @@ def degree_distribution(df):
 def categorized_statistics_gui(df, condition):
     # Not sure what happens if filter is empty
     # Use case is supposed to be for queries like "generate statistics for views > 10000"
+    
     if condition != "":
         df = df.filter(condition)
         df.show()
@@ -73,6 +77,7 @@ def categorized_statistics_gui(df, condition):
 def categorized_statistics(df):
     # Not sure what happens if filter is empty
     # Use case is supposed to be for queries like "generate statistics for views > 10000"
+
     condition = input("Filter data: ")
     if condition != "":
         df = df.filter(condition)
@@ -89,6 +94,40 @@ def categorized_statistics(df):
         else:
             print("Invalid input.")
     return
+
+def Full_SQL(df):
+    
+    #Start spark session 
+    spark = SparkSession.builder.appName("MyApp").getOrCreate()
+    
+    # convert PySpark DataFrame to temporary table/view
+    table_name = input("Enter table name: ")
+    df.createOrReplaceTempView(table_name)
+
+    # execute SQL command on the temporary table/view
+    print("Use SQL commands ONLY, current table name is " + table_name)
+    result = spark.sql(input())
+
+    # show the result
+    result.show()
+
+    # get user to store file 
+    while True: 
+        print("Save these reults in CSV?")
+        print("[N]o\n[Y]es\n")
+        response = input("")
+        if(response == "N"):
+            print("Response not saved...")
+            return
+        if(response == "Y"):            
+            output_dir = input("Enter output directory path: ")
+            result.write.csv(output_dir, header=True)
+            return
+        else:
+            print("Invalid input")
+
+    #stop spark session 
+    spark.stop()
 
 
 def generate_statistics(df):
