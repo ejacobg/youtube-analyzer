@@ -1,0 +1,393 @@
+brary(scales)#
+library(gridExtra)#
+library(ggplot2)#
+library(ggpubr)#
+#
+#read csv file #
+csv_path <- file.path(getwd(), "a.csv")#
+data <- read.csv(csv_path)#
+#
+#read csv file #
+csv_path_total <- file.path(getwd(), "b.csv")#
+data_totals <- read.csv(csv_path_total)#
+# calculate percentage of total views for each category#
+data_totals$percent <- data_totals$total_views / sum(data_totals$total_views)#
+#
+# create a pie chart with category as the label and percent as the value#
+pie_chart <- ggplot(data_video, aes(x = "", y = percent, fill = category)) + #
+  geom_bar(stat = "identity", width = 1) +#
+  coord_polar("y", start = 0) +#
+  labs(title = "Video Views by Category", fill = "Category") +#
+  theme_void()#
+#
+# add percentage labels to the chart#
+pie_chart + geom_text(aes(label = paste0(round(percent * 100), "%")), position = position_stack(vjust = 0.5))
+# create a pie chart with category as the label and percent as the value#
+pie_chart <- ggplot(data_video, aes(x = "", y = percent, fill = category)) + #
+  geom_bar(stat = "identity", width = 1) +#
+  coord_polar("y", start = 0) +#
+  labs(title = "Video Views by Category", fill = "Category") +#
+  theme_void()
+#read csv file #
+csv_path_total <- file.path(getwd(), "b.csv")#
+data_totals <- read.csv(csv_path_total)#
+# calculate percentage of total views for each category#
+data_totals$percent <- data_totals$total_views / sum(data_totals$total_views)#
+#
+# create a pie chart with category as the label and percent as the value#
+pie_chart <- ggplot(data_totals, aes(x = "", y = percent, fill = category)) + #
+  geom_bar(stat = "identity", width = 1) +#
+  coord_polar("y", start = 0) +#
+  labs(title = "Video Views by Category", fill = "Category") +#
+  theme_void()#
+#
+# add percentage labels to the chart#
+pie_chart + geom_text(aes(label = paste0(round(percent * 100), "%")), position = position_stack(vjust = 0.5))
+# add percentage labels to the chart#
+pie_chart + geom_text(aes(label = paste0(round(percent * 100), "%")), position = position_stack(vjust = 0.5))
+# calculate percentage of total views for each category#
+data_totals$percent <- data_totals$total_views / sum(data_totals$total_views)#
+#
+# create a pie chart with category as the label and percent as the value#
+pie_chart <- ggplot(data_totals, aes(x = "", y = percent, fill = category)) + #
+  geom_bar(stat = "identity", width = 1) +#
+  coord_polar("y", start = 0) +#
+  labs(title = "Video Views by Category", fill = "Category") +#
+  theme_void()#
+#
+# add percentage labels to the chart#
+pie_chart + geom_text(aes(label = paste0(round(percent * 100), "%")), position = position_stack(vjust = 1))
+# calculate percentage of total views for each category#
+data_video$percent <- data_video$total_views / sum(data_video$total_views)#
+#
+# create a pie chart with category as the label and percent as the value#
+pie_chart <- ggplot(data_video, aes(x = "", y = percent, fill = category)) + #
+  geom_bar(stat = "identity", width = 1) +#
+  coord_polar("y", start = 0) +#
+  labs(title = "Video Views by Category") +#
+  scale_fill_discrete(labels = paste0(data_video$category, " (", round(data_video$percent*100), "%)")) +#
+  guides(fill = guide_legend(title = "Category"))#
+#
+# remove the percentage labels from the chart#
+pie_chart + theme(legend.position = "bottom", legend.box = "horizontal")
+# calculate percentage of total views for each category#
+data_video$percent <- data_video$total_views / sum(data_video$total_views)#
+#
+# create a pie chart with category as the label and percent as the value#
+pie_chart <- ggplot(data_video, aes(x = "", y = percent, fill = category)) + #
+  geom_bar(stat = "identity", width = 1) +#
+  coord_polar("y", start = 0) +#
+  labs(title = "Video Views by Category") +#
+  scale_fill_discrete(name = "Category", labels = paste0(data_video$category, " (", round(data_video$percent*100), "%)"))#
+#
+# remove the percentage labels from the chart#
+pie_chart + theme(legend.position = "bottom", legend.box = "horizontal")
+pie_chart <- ggplot(data_video, aes(x = "", y = percent, fill = category)) + #
+  geom_bar(stat = "identity", width = 1) +#
+  coord_polar("y", start = 0) +#
+  labs(title = "Video Views by Category") +#
+  scale_fill_discrete(name = "Category", labels = paste0(data_video$category, " (", round(data_video$percent*100), "%)"))
+# remove the percentage labels from the chart#
+pie_chart + theme(legend.position = "left", legend.box = "vertical")
+# create a pie chart with category as the label and percent as the value#
+pie_chart <- ggplot(data_video, aes(x = "", y = percent, fill = category)) + #
+  geom_bar(stat = "identity", width = 1) +#
+  coord_polar("y", start = 0) +#
+  labs(title = "Video Views by Category") +#
+  scale_fill_discrete(name = "Category", labels = paste0(data_video$category, " (", round(data_video$percent*100), "%)"))#
+#
+# remove the percentage labels from the chart#
+pie_chart + theme(legend.position = "bottom", legend.box = "horizontal")
+# calculate percentage of total views for each category#
+data_video$percent <- data_video$total_views / sum(data_video$total_views)#
+#
+# create a pie chart with category as the label and percent as the value#
+pie_chart <- ggplot(data_video, aes(x = "", y = percent, fill = category)) + #
+  geom_bar(stat = "identity", width = 1) +#
+  coord_polar("y", start = 0) +#
+  labs(title = "Video Views by Category") +#
+  scale_fill_discrete(name = "Category", labels = data_video$category)#
+#
+# modify the legend title and label to include percentages#
+pie_chart + theme(legend.position = "bottom", legend.box = "horizontal") +#
+  guides(fill = guide_legend(title = "Category (Percent)",#
+                              label = paste0(data_video$category, " (", round(data_video$percent*100), "%)")))
+d csv file #
+csv_path_total <- file.path(getwd(), "b.csv")#
+data_video
+csv_path_total <- file.path(getwd(), "b.csv")#
+data_video <- read.csv(csv_path_total)
+# calculate percentage of total views for each category#
+data_video$percent <- data_video$total_views / sum(data_video$total_views)#
+#
+# create a pie chart with category as the label and percent as the value#
+pie_chart <- ggplot(data_video, aes(x = "", y = percent, fill = category)) + #
+  geom_bar(stat = "identity", width = 1) +#
+  coord_polar("y", start = 0) +#
+  labs(title = "Video Views by Category") +#
+  scale_fill_discrete(name = "Category", labels = data_video$category)#
+#
+# modify the legend title and label to include percentages#
+pie_chart + theme(legend.position = "bottom", legend.box = "horizontal") +#
+  guides(fill = guide_legend(title = "Category (Percent)",#
+                              label
+#read csv file #
+csv_path_total <- file.path(getwd(), "b.csv")#
+data_video <- read.csv(csv_path_total)#
+#
+# calculate percentage of total views for each category#
+data_video$percent <- data_video$total_views / sum(data_video$total_views)#
+#
+# create a pie chart with category as the label and percent as the value#
+pie_chart <- ggplot(data_video, aes(x = "", y = percent, fill = category)) + #
+  geom_bar(stat = "identity", width = 1) +#
+  coord_polar("y", start = 0) +#
+  labs(title = "Video Views by Category") +#
+  scale_fill_discrete(name = "Category", labels = data_video$category)#
+#
+# modify the legend title and label to include percentages#
+pie_chart + theme(legend.position = "bottom", legend.box = "horizontal") +#
+  guides(fill = guide_legend(title = "Category (Percent)",#
+                              label = paste0(data_video$category, " (", round(data_video$percent*100), "%)")))
+csv_path <- file.path(getwd(), "a.csv")#
+data <- read.csv(csv_path)#
+#
+#read csv file #
+csv_path_total <- file.path(getwd(), "b.csv")#
+data_video <- read.csv(csv_path_total)#
+#
+# calculate percentage of total views for each category#
+data_video$percent <- data_video$total_views / sum(data_video$total_views)#
+#
+# create a pie chart with category as the label and percent as the value#
+pie_chart <- ggplot(data_video, aes(x = "", y = percent, fill = category)) + #
+  geom_bar(stat = "identity", width = 1) +#
+  coord_polar("y", start = 0) +#
+  labs(title = "Video Views by Category") +#
+  scale_fill_discrete(name = "Category", labels = data_video$category)#
+#
+# modify the legend title and label to include percentages#
+pie_chart + theme(legend.position = "bottom", legend.box = "horizontal") +#
+  guides(fill = guide_legend(title = "Category (Percent)",#
+                              label = paste0(data_video$category, " (", round(data_video$percent*100), "%)")))
+csv_path_total <- file.path(getwd(), "b.csv")#
+data_video <- read.csv(csv_path_total)#
+#
+pie_chart + theme(legend.position = "bottom", legend.box = "horizontal") +#
+  guides(fill = guide_legend(title = "Category (Percent)")) +#
+  scale_fill_discrete(labels = paste0(data_video$category, " (", round(data_video$percent*100), "%)")) +#
+  theme(legend.text = element_text(size = 12))
+# calculate percentage of total views for each category#
+data_video$percent <- data_video$total_views / sum(data_video$total_views)#
+#
+# create a pie chart with category as the label and percent as the value#
+pie_chart <- ggplot(data_video, aes(x = "", y = percent, fill = category)) + #
+  geom_bar(stat = "identity", width = 1) +#
+  coord_polar("y", start = 0) +#
+  labs(title = "Video Views by Category") +#
+  scale_fill_discrete(name = "Category", labels = data_video$category)#
+#
+# modify the legend title and label to include percentages#
+pie_chart + theme(legend.position = "bottom", legend.box = "horizontal") +#
+  guides(fill = guide_legend(title = "Category (Percent)",#
+                              label = paste0(data_video$category, " (", round(data_video$percent*100), "%)")))
+# create a pie chart with category as the label and percent as the value#
+pie_chart <- ggplot(data_video, aes(x = "", y = percent, fill = category)) + #
+  geom_bar(stat = "identity", width = 1) +#
+  coord_polar("y", start = 0) +#
+  labs(title = "Video Views by Category") +#
+  scale_fill_discrete(name = "Category", labels = data_video$category)#
+#
+# modify the legend title and label to include percentages#
+pie_chart + theme(legend.position = "bottom", legend.box = "horizontal") +#
+  guides(fill = guide_legend(title = "Category (Percent)",#
+                              label = paste0(data_video$category, " (", round(data_video$percent*100), "%)")))
+# calculate percentage of total views for each category#
+data_video$percent <- data_video $total_views / sum(data_video $total_views)#
+#
+# create a pie chart with category as the label and percent as the value#
+pie_chart <- ggplot(data_video, aes(x = "", y = percent, fill = category)) + #
+  geom_bar(stat = "identity", width = 1) +#
+  coord_polar("y", start = 0) +#
+  labs(title = "Video Views by Category", fill = "Category") +#
+  theme_void()#
+#
+# add percentage labels to the chart#
+pie_chart + geom_text(aes(label = paste0(round(percent * 100),
+d csv file #
+csv_path_total <- file.path(getwd(), "b.csv")#
+data_video <- read.csv(csv_path_total)#
+# calculate percentage of total views for each category#
+data_video$percent <- data_video $total_views / sum(data_video $total_views)#
+#
+# create a pie chart with category as the label and percent as the value#
+pie_chart <- ggplot(data_video, aes(x = "", y = percent, fill = category)) + #
+  geom_bar(stat = "identity", width = 1) +#
+  coord_polar("y", start = 0) +#
+  labs(title = "Video Views by Category", fill = "Category") +#
+  theme_void()#
+#
+# add percentage labels to the chart#
+pie_chart + geom_text(aes(label = paste0(round(percent * 100), "%")), position = position_stack(vjust = 0.5))
+#Comment and View Ratio #
+# Read in the first CSV file as a data frame#
+df1 <- read.csv("cv1.csv")#
+#
+# Read in the second CSV file as a data frame#
+df2 <- read.csv("cv2.csv")#
+#
+# Combine the two data frames using rbind()#
+merged_df <- rbind(df1, df2)
+correlation <- cor(merged_df $views, merged_df$comments)
+correlation
+ggplot(merged_df, aes(x = views, y = comments)) + geom_histogram2d(binwidth = c(1000, 10)) + scale_x_continuous("Views") + scale_y_continuous("Comments")
+# Create the histogram using ggplot2#
+ggplot(merged_df, aes(x = views, y = comments)) +#
+  geom_histogram2d(binwidth = c(1000, 10)) +#
+  scale_x_continuous("Views") +#
+  scale_y_continuous("Comments")
+library(ggplot2)
+the histogram using ggplot2#
+#
+# Create the histogram using ggplot2#
+ggplot(merged_df, aes(x = views, y = comments)) +#
+  geom_histogram2d(binwidth = c(1000, 10)) +#
+  scale_x_continuous("Views") +#
+  scale_y_continuous("Comments")
+#install packages for data visulization #
+library(scales)#
+library(gridExtra)#
+library(ggplot2)#
+library(ggpubr)
+# Create the histogram using ggplot2#
+ggplot(merged_df, aes(x = views, y = comments)) +#
+  geom_histogram2d(binwidth = c(1000, 10)) +#
+  scale_x_continuous("Views") +#
+  scale_y_continuous("Comments")
+# Create the histogram using ggplot2#
+ggplot(df, aes(x = views, y = comments)) +#
+  geom_bin2d(binwidth = c(1000, 10)) +#
+  scale_x_continuous("Views") +#
+  scale_y_continuous("Comments")
+ggplot2#
+# Create the histogram using ggplot2#
+ggplot(merged_df, aes(x = views, y = comments)) +#
+  geom_bin2d(binwidth = c(1000, 10)) +#
+  scale_x_continuous("Views") +#
+  scale_y_continuous("Comments")
+# Create the histogram using ggplot2#
+# Create the histogram using ggplot2#
+ggplot(merged_df, aes(x = views, y = comments)) +#
+  geom_bin2d( scale_x_continuous("Views") +#
+  scale_y_continuous("Comments")
+# Combine the two data frames using rbind()#
+merged_df <- rbind(df1, df2)#
+#
+correlation <- cor(merged_df $views, merged_df$comments)#
+correlation
+#Comment and View Ratio #
+# Read in the first CSV file as a data frame#
+df1 <- read.csv("cv1.csv")#
+#
+# Read in the second CSV file as a data frame#
+df2 <- read.csv("cv2.csv")#
+#
+# Combine the two data frames using rbind()#
+df <- rbind(df1, df2)#
+#
+correlation <- cor(df$views, df$comments)#
+correlation#
+#
+# Create the 2D histogram using hist()#
+hist2d <- hist2d(x = df$views, y = df$comments,#
+                 breaks = list(x = seq(0, max(df$views), by = 1000), y = seq(0, max(df$comments), by = 10)),#
+                 col = "blue", main = "2D Histogram of Views vs Comments",#
+                 xlab = "Views", ylab = "Comments")#
+#
+# Plot the 2D histogram using plot()#
+plot(hist2d, col = terrain.colors(100), border = NA)
+# Create the 2D histogram using hist()#
+hist2d <- hist2d(x = df$views, y = df$comments, breaks = list(x = seq(0, max(df$views), by = 1000), y = seq(0, max(df$comments), by = 10)), col = "blue", main = "2D Histogram of Views vs Comments", xlab = "Views", ylab = "Comments")#
+#
+# Plot the 2D histogram using plot()#
+plot(hist2d, co
+ion#
+#
+# Create the 2D histogram using hist()#
+hist2d <- hist2d(x = df$views, y = df$comments, breaks = list(x = seq(0, max(df$views), by = 1000), y = seq(0, max(df$comments), by = 10)), col = "blue", main = "2D Histogram of Views vs Comments", xlab = "Views", ylab = "Comments")#
+#
+# Plot the 2D histogram using plot()#
+plot(hist2d, col = terrain.colors(100), border = NA)
+hist2d <- hist2d(x = df$views, y = df$comments, breaks = list(x = seq(0, max(df$views), by = 1000), y = seq(0, max(df$comments), by = 10)), col = "blue", main = "2D Histogram of Views vs Comments", xlab = "Views", ylab = "Comments")
+ggplot(df, aes(x = views, y = comments)) + geom_bin2d(bins = 50) + scale_fill_gradient(low = "white", high = "steelblue") + labs(title = "2D Histogram of Views vs Comments", x = "Views", y = "Comments")
+hist(df$views, df$comments)
+Create a data frame with views and comments#
+df <- data.frame(#
+  views = c(1000, 2000, 1500, 3000, 4000),#
+  comments = c(10, 20, 15, 30, 40)#
+)#
+#
+# Create a histogram with ggplot2#
+ggplot(df, aes(x = views, y = comments)) +#
+  geom_histogram(stat = "identity", bins = 10, fill = "blue", alpha = 0.5) +#
+  ggtitle("Views vs Comments") +#
+  xlab("Views") +#
+  ylab("Comments")
+# Create a histogram with ggplot2#
+ggplot(df, aes(x = views, y = comments)) +#
+  geom_histogram(stat = "identity", bins = 10, fill = "blue", alpha = 0.5) +#
+  ggtitle("Views vs Comments") +#
+  xlab("Views") +#
+  ylab("Comments")
+#Comment and View Ratio #
+# Read in the first CSV file as a data frame#
+df1 <- read.csv("cv1.csv")#
+#
+# Read in the second CSV file as a data frame#
+df2 <- read.csv("cv2.csv")#
+#
+# Combine the two data frames using rbind()#
+df <- rbind(df1, df2)#
+#
+correlation <- cor(df$views, df$comments)#
+correlation#
+#
+# Load the ggplot2 package#
+library(ggplot2)#
+# Create a histogram with ggplot2#
+ggplot(df, aes(x = views, y = comments)) +#
+  geom_histogram(stat = "identity", bins = 10, fill = "blue", alpha = 0.5) +#
+  ggtitle("Views vs Comments") +#
+  xlab("Views") +#
+  ylab("Comments")
+len(df$comments)
+length(df$comments)
+length(df$views)
+plot(x, y, main = "X vs Y", xlab = "X-axis label", ylab = "Y-axis label")
+# Create some example data#
+x <- c(1, 2, 3, 4, 5)#
+y <- c(2, 4, 6, 8, 10)#
+#
+# Plot x against y#
+plot(x, y, main = "X vs Y", xlab = "X-axis label", ylab = "Y-axis label")
+st y#
+plot(df$views, df$comments, main = "X vs Y", xlab = "X-axis label", ylab = "Y-axis label")
+correlation <- cor(df$views, df$comments)#
+correlation
+ggplot(df, aes(x = views, y = comments)) +#
+  geom_histogram(stat = "identity", bins = 10, fill = "blue", alpha = 0.5) +#
+  ggtitle("Views vs Comments") +#
+  xlab("Views") +#
+  ylab("Comments")
+correlation <- cor(df$views, df$comments)#
+correlation#
+max(df$views)#
+max(df$comments)
+# Load the ggplot2 package#
+library(ggplot2)#
+# Create a histogram with ggplot2#
+ggplot(df, aes(x = views, y = comments)) +#
+  geom_histogram(stat = "identity", bins = 1, fill = "blue", alpha = 0.5) +#
+  ggtitle("Views vs Comments") +#
+  xlab("Views") +#
+  ylab("Comments")
