@@ -8,13 +8,22 @@ library(ggpubr)
 csv_path <- file.path(getwd(), "a.csv")
 data <- read.csv(csv_path)
 
-#read csv file 
+#read csv file
 csv_path_total <- file.path(getwd(), "b.csv")
 data_video <- read.csv(csv_path_total)
 
-
 # calculate percentage of total views for each category
 data_video$percent <- data_video $total_views / sum(data_video $total_views)
+
+
+library(dplyr)
+
+threshold <- 0.10
+
+test.group <- test %>%
+  mutate(grp = cumsum(data_video$percent > threshold)) 
+
+print(test.group, row.names = F)
 
 # create a pie chart with category as the label and percent as the value
 pie_chart <- ggplot(data_video, aes(x = "", y = percent, fill = category)) + 
