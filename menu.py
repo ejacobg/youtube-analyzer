@@ -2,6 +2,7 @@ import os
 from degrees import write_degrees
 from read import read_file
 from stats import aggregate_columns
+from avg_stats import write_avg_stats
 from pyspark.sql.functions import concat_ws
 from pyspark.sql import SparkSession
 
@@ -19,7 +20,7 @@ def menu():
     command = " "
     while True:
         print(
-            "====Menu====\n [D]egree Distribution\n [C]ategorized Statistics\n [R]estart\n [S]ql Command\n [E]xit"
+            "====Menu====\n [D]egree Distribution\n [C]ategorized Statistics\n [R]estart\n [S]ql Command\n [M]edian Stats for Categories\n [E]xit"
         )
 
         command = input("Enter Command: ")
@@ -32,6 +33,8 @@ def menu():
             df = input_file()
         elif command == "S":
             Full_SQL(df)
+        elif command == "M":
+            avg_category_stats(df)
         elif command == "E":
             break
         else:
@@ -45,6 +48,10 @@ def input_file():
     # Also return a second argument indicating success?
     return read_file(file).dropna()
 
+def avg_category_stats(df):
+    dir = input("Output directory: ")
+    write_avg_stats(df, dir)
+    print("Finished.")
 
 def degree_distribution(df):
     dir = input("Output directory: ")
