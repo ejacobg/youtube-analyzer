@@ -10,6 +10,7 @@ library(tidyr)
 degree_path <-  file.path(getwd(), "degree.csv")
 top_k_path <- file.path(getwd(), "top_100.csv")
 median_data_path <- file.path(getwd(), "median_stats.csv")
+top_k_data_per_cat_path <- file.path(getwd(), "top_100_per_cat.csv")
 
 degree_data <- read.csv(degree_path)
 
@@ -68,17 +69,19 @@ pie_chart <- ggplot(category_counts, aes(x = "", y = count, fill = factor(label,
 # Display the pie chart
 print(pie_chart)
 
-
-box_plot <- ggplot(top_k_data, aes(x = factor(category), y = length)) +
+top_k_data_per_cat <- read.csv(top_k_data_per_cat_path)
+box_plot <- ggplot(top_k_data_per_cat, aes(x = factor(category), y = length)) +
   geom_boxplot() +
   theme_minimal() +
   labs(title = "Box Plot of Video Lengths by Category",
        x = "Category",
        y = "Length (seconds)") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_y_continuous(limits = c(0, 500))
 
 # Display the box plot
 print(box_plot)
+
 
 # Code for average/median trends
 
