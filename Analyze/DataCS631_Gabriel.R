@@ -10,23 +10,22 @@ options(scipen = 999)
 #read csv files
 
 #read this file for the pie chart 
-csv_path <- file.path(getwd(), "a.csv")
+csv_path <- file.path(getwd(), "most_viewed.csv")
 data <- read.csv(csv_path)
 
 #read this file for the bar graphs 
-csv_path_total <- file.path(getwd(), "b.csv")
+csv_path_total <- file.path(getwd(), "total_views.csv")
 data_video <- read.csv(csv_path_total)
 
 #read these files for the comment vs views 
 # Read in the first CSV file as a data frame
-df1 <- read.csv("cv1.csv")
+df1 <- read.csv("views_comments_1.csv")
 # Read in the second CSV file as a data frame
-df2 <- read.csv("cv2.csv")
+df2 <- read.csv("views_comments_1.csv")
 # Combine the two data frames using rbind()
 df <- rbind(df1, df2)
 # Read in the data as a data frame
 df <- read.csv("cv_data.csv")
-print(df)
 # Read in the data as a data frame
 df3 <- read.csv("Degree.csv")
 df4 <- read.csv("comments1.csv")
